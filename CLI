@@ -1,0 +1,53 @@
+import typer
+from rich.console import Console
+from rich.table import Table
+from rich.progress import Progress, SpinnerColumn, TextColumn
+
+# Initialize Rich Console and Typer App
+console = Console()
+app = typer.Typer(help="🚀 Enterprise Codespace Topology Engine CLI")
+
+@app.command()
+def scan(
+    target: str = typer.Argument(".", help="The root workspace directory to recursively scan"),
+    config: str = typer.Option(None, "--config", "-c", help="Optional path to a custom configuration file (.json)"),
+    export: str = typer.Option(None, "--export", "-e", help="Output JSON metrics export path"),
+    visualize: str = typer.Option(None, "--visualize", "-v", help="Output path for graph image (.png) or interactive map (.html)")
+):
+    """
+    Ingest a repository, map polyglot dependencies, and isolate agentic loops.
+    """
+    console.print("\n[bold deep_sky_blue1]🚀 ENTERPRISE CODESPACE TOPOLOGY ENGINE ACTIVE[/bold deep_sky_blue1]\n")
+    
+    # 1. Live Progress Status Spinner
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        transient=True
+    ) as progress:
+        progress.add_task(description="Scanning workspace architecture...", total=None)
+        
+        # Initialize your Engine Logic
+        engine = UniversalTopologyEngine(target, config_path=config)
+        engine.scan_repository()
+
+    # 2. Render Results Using a Rich Table instead of raw text
+    table = Table(title="Engine Scanning Diagnostics", title_style="bold magenta")
+    table.add_column("Metric", style="cyan", no_wrap=True)
+    table.add_column("Value", style="green")
+
+    table.add_row("Target Directory", str(engine.root_dir))
+    table.add_row("Total Mapped Nodes", str(len(engine.file_metadata)))
+    console.print(table)
+    
+    # 3. Handle File Outputs with UI feedback
+    if export:
+        engine.export_json(export)
+        console.print(f"[bold green]💾 Export Matrix Captured Safely:[/bold green] {export}")
+        
+    if visualize:
+        engine.generate_visual_graph(visualize)
+        console.print(f"[bold green]🎨 Architecture Chart Generated:[/bold green] {visualize}")
+
+if __name__ == "__main__":
+    app()
