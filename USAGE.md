@@ -148,3 +148,29 @@ jobs:
       - name: Assert Architectural Constraints
         run: ste validate -f ./infra/topology.yaml --strict
 Standard CLI Return Code ReferenceThe engine sets predictive exit codes allowing you to orchestrate distinct pipeline recovery logic hooks:Exit CodeStructural ConditionMeaning0Clean RunSchema passes validations and policy requirements perfectly.1Syntax/Parse ErrorFile format schema broken or missing critical definitions.2Policy ViolationGraph structure explicitly broke a defined isolation policy rule.3Cyclic FaultA circular structural dependency loop was discovered in your design.
+
+**##Step 7: Automating inside CI/CD Pipelines**
+
+Integrate topology verification checks directly into your trunk-based integration runs using standard shell execution gates.
+
+GitHub Actions Integration Example
+YAML
+name: Architecture Linting
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  topology-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Base
+        uses: actions/checkout@v4
+
+      - name: Setup System Topology Engine
+        run: curl -sSL [https://raw.githubusercontent.com/bandesh/system-topology-engine/main/install.sh](https://raw.githubusercontent.com/bandesh/system-topology-engine/main/install.sh) | sh
+
+      - name: Assert Architectural Constraints
+        run: ste validate -f ./infra/topology.yaml --st
